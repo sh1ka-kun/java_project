@@ -13,12 +13,10 @@ public class Point
         this.x2 = x2;
         this.y1 = y1;
         this.y2 = y2;
-    };
+    }
 
-    public double[] distance()
+    public double distance()
     {
-        double p1 = this.x2-this.x1;
-        double p2 = this.y2-this.y1;
-        return new double[]{p1,p2};
+        return Math.sqrt(Math.pow((this.x2-this.x1),2) + (Math.pow((this.y2-this.y1),2)));
     }
 }
