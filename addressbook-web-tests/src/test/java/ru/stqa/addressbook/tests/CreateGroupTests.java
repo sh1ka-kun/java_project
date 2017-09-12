@@ -7,11 +7,7 @@ public class CreateGroupTests extends BaseMethods {
 
     @Test
     public void createGroup() throws InterruptedException {
-        Thread.sleep(100);
         app.getNavigationHelper().gotoGroupPage();
-        app.getGroupHelper().clickCreateGroup();
-        app.getGroupHelper().fillGroupForm(new GroupData("Test1", "test1", "test1"));
-        app.getGroupHelper().submitGroupCreation();
-        app.getGroupHelper().returnToGroupPage();
+        app.getGroupHelper().createGroup(new GroupData("Test1", "test1", "test1"));
     }
 }

@@ -1,12 +1,12 @@
 package ru.stqa.addressbook.appmanager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.WebDriver;
 import ru.stqa.addressbook.data.GroupData;
 
 public class GroupHelper extends BaseHelper {
 
-    public GroupHelper(FirefoxDriver wd) {
+    public GroupHelper(WebDriver wd) {
         super(wd);
     }
 
@@ -39,4 +39,15 @@ public class GroupHelper extends BaseHelper {
     }
 
     public void SubmitGroupUpdate() { click(By.name("update")); }
+
+    public void createGroup(GroupData group) {
+        clickCreateGroup();
+        fillGroupForm(group);
+        submitGroupCreation();
+        returnToGroupPage();
+    }
+
+    public boolean isThereAGroup() {
+        return isElementPresent(By.name("selected[]"));
+    }
 }

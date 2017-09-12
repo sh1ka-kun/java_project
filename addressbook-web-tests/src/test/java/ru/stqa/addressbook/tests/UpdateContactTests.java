@@ -7,7 +7,6 @@ public class UpdateContactTests extends BaseMethods {
 
     @Test
     public void UpdateContactTests() throws InterruptedException {
-        Thread.sleep(100);
         app.getContactHelper().selectContact();
         app.getContactHelper().clickContactUpdate();
         app.getContactHelper().fillContactForm(new ContactData("1", "2", "3", "4", "5"));
