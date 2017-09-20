@@ -1,21 +1,12 @@
 package ru.stqa.addressbook.data;
 
 public class ContactData {
-    private int id;
-    private final String firstName;
-    private final String lastName;
-    private final String address;
-    private final String mobilePhone;
-    private final String email;
-
-    public ContactData(int id, String firstName, String lastName, String address, String mobilePhone, String email) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.mobilePhone = mobilePhone;
-        this.email = email;
-    }
+    private int id = Integer.MAX_VALUE;
+    private String firstName;
+    private String lastName;
+    private String address;
+    private String mobilePhone;
+    private String email;
 
     @Override
     public String toString() {
@@ -25,21 +16,38 @@ public class ContactData {
                 '}';
     }
 
-    public ContactData(String firstName, String lastName, String address, String mobilePhone, String email) {
-        this.id = Integer.MAX_VALUE;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.mobilePhone = mobilePhone;
-        this.email = email;
-    }
-
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public ContactData withFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public ContactData withLastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public ContactData withAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public ContactData withMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+        return this;
+    }
+
+    public ContactData withEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public ContactData withId(int id) {
         this.id = id;
+        return this;
     }
 
     @Override

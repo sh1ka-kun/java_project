@@ -16,10 +16,6 @@ public class ContactHelper extends BaseHelper {
         super(wd);
     }
 
-    public void returnToHomePage() {
-        click(By.linkText("home"));
-    }
-
     public void submitContactCreation() {
         click(By.xpath("//div[@id='content']/form/input[21]"));
     }
@@ -48,22 +44,14 @@ public class ContactHelper extends BaseHelper {
 
     public void confirmContactDeletion() { wd.switchTo().alert().accept(); }
 
-    public void createContact(ContactData contact) {
+    public void create(ContactData contact) {
         clickAddContact();
         fillContactForm(contact);
         submitContactCreation();
         returnToHomePage();
     }
 
-    public boolean isThereAContact() {
-        return isElementPresent(By.name("selected[]"));
-    }
-
-    public int getContactCount() {
-        return wd.findElements(By.name("selected[]")).size();
-    }
-
-    public List<ContactData> getContactList() {
+    public List<ContactData> list() {
         List<ContactData> contacts = new ArrayList<ContactData>();
         List<WebElement> elements = wd.findElements(By.xpath("//tbody/tr[@name='entry']"));
         for (WebElement element : elements)
@@ -72,9 +60,27 @@ public class ContactHelper extends BaseHelper {
             List<WebElement> cells = element.findElements(By.tagName("td"));
             String lastName = cells.get(1).getText();
             String firstName = cells.get(2).getText();
-            ContactData contact = new ContactData(id, firstName, lastName, null, null, null);
-            contacts.add(contact);
+            contacts.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName));
         }
         return contacts;
     }
+
+    public void update(int index, ContactData contact) {
+        clickContactUpdate(index);
+        fillContactForm(contact);
+        submitContactUpdate();
+        returnToHomePage();
+    }
+
+    public void delete(int index) {
+        selectContact(index);
+        deleteContact();
+        confirmContactDeletion();
+        returnToHomePage();
+    }
+
+    public void returnToHomePage() {
+        click(By.linkText("home"));
+    }
+
 }
