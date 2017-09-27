@@ -1,25 +1,33 @@
 package ru.stqa.addressbook.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import ru.stqa.addressbook.data.GroupData;
+import ru.stqa.addressbook.data.Groups;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GroupCreateTests extends BaseMethods {
 
     @Test
     public void createGroup() throws InterruptedException {
         app.goTo().groupPage();
-        Set<GroupData> before = app.group().all();
+        Groups before = app.group().all();
         GroupData group = new GroupData().withName("name").withFooter("footer").withHeader("header");
         app.group().create(group);
-        Set<GroupData> after = app.group().all();
-        Assert.assertEquals(after.size(), before.size() + 1);
+        assertThat(app.group().count(), equalTo(before.size() + 1));
+        Groups after = app.group().all();
+        assertThat(after, equalTo(before.withAdded(group.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));
+    }
 
-        before.add(group);
-        Assert.assertEquals(after, before);
+    @Test
+    public void createBadNameGroup() throws InterruptedException {
+        app.goTo().groupPage();
+        Groups before = app.group().all();
+        GroupData group = new GroupData().withName("name'").withFooter("footer").withHeader("header");
+        app.group().create(group);
+        assertThat(app.group().count(), equalTo(before.size()));
+        Groups after = app.group().all();
+        assertThat(after, equalTo(before));
     }
 }

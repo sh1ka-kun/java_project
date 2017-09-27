@@ -6,18 +6,40 @@ public class ContactData {
     private String lastName;
     private String address;
     private String mobilePhone;
+    private String homePhone;
+    private String workPhone;
     private String email;
-
-    @Override
-    public String toString() {
-        return "ContactData{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
-    }
 
     public int getId() {
         return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public String getWorkPhone() {
+        return workPhone;
     }
 
     public ContactData withFirstName(String firstName) {
@@ -50,6 +72,16 @@ public class ContactData {
         return this;
     }
 
+    public ContactData withHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+        return this;
+    }
+
+    public ContactData withWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,34 +89,25 @@ public class ContactData {
 
         ContactData that = (ContactData) o;
 
+        if (id != that.id) return false;
         if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
         return lastName != null ? lastName.equals(that.lastName) : that.lastName == null;
     }
 
     @Override
     public int hashCode() {
-        int result = firstName != null ? firstName.hashCode() : 0;
+        int result = id;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         return result;
     }
 
-    public String getFirstName() {
-        return firstName;
+    @Override
+    public String toString() {
+        return "ContactData{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 }

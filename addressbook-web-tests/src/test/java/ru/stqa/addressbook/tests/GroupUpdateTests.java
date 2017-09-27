@@ -1,19 +1,19 @@
 package ru.stqa.addressbook.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import ru.stqa.addressbook.data.GroupData;
+import ru.stqa.addressbook.data.Groups;
 
-import java.util.Comparator;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GroupUpdateTests extends BaseMethods {
 
     @BeforeTest
     public void ensurePreconditions(){
         app.goTo().groupPage();
-        if(app.group().list().size() == 0) {
+        if(app.group().all().size() == 0) {
             app.group().create(new GroupData().withName("name").withFooter("footer").withHeader("header"));
         }
     }
@@ -21,19 +21,13 @@ public class GroupUpdateTests extends BaseMethods {
     @Test
     public void UpdateGroupTests() throws InterruptedException {
 
-        List<GroupData> before = app.group().list();
-        int index = before.size() - 1;
-        GroupData group = new GroupData().withId(before.get(index).getId()).withName("updname").withFooter("updfooter").withHeader("updheader");
-        app.group().update(index, group);
-        List<GroupData> after = app.group().list();
-        Assert.assertEquals(after.size(), before.size());
-
-        before.remove(index);
-        before.add(group);
-        Comparator<? super GroupData> byId = (g1, g2) -> Integer.compare(g1.getId(), g2.getId());
-        before.sort(byId);
-        after.sort(byId);
-        Assert.assertEquals(after, before);
+        Groups before = app.group().all();
+        GroupData updatedGroup = before.iterator().next();
+        GroupData group = new GroupData().withId(updatedGroup.getId()).withName("updname").withFooter("updfooter").withHeader("updheader");
+        app.group().update(group);
+        assertThat(app.group().count(), equalTo(before.size()));
+        Groups after = app.group().all();
+        assertThat(after, equalTo(before.without(updatedGroup).withAdded(group)));
     }
 
 

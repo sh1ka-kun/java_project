@@ -1,18 +1,18 @@
 package ru.stqa.addressbook.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import ru.stqa.addressbook.data.ContactData;
+import ru.stqa.addressbook.data.Contacts;
 
-import java.util.HashSet;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactDeleteTests extends BaseMethods {
 
     @BeforeTest
     public void ensurePreconditions(){
-        if(app.contact().list().size() == 0) {
+        if(app.contact().all().size() == 0) {
             app.contact().create(new ContactData().
                     withFirstName("firstName").withLastName("lastName").withEmail("email@com").withAddress("address").withMobilePhone("156"));
         }
@@ -20,14 +20,12 @@ public class ContactDeleteTests extends BaseMethods {
 
     @Test
     public void DeleteContactTests() throws InterruptedException {
-        List<ContactData> before = app.contact().list();
-        int index = before.size() - 1;
-        app.contact().delete(index);
-        List<ContactData> after = app.contact().list();
-        Assert.assertEquals(after.size(), index);
-
-        before.remove(index);
-        Assert.assertEquals(new HashSet<Object>(after), new HashSet<Object>(before));
+        Contacts before = app.contact().all();
+        ContactData deletedContact = before.iterator().next();
+        app.contact().delete(deletedContact);
+        assertThat(app.contact().count(), equalTo(before.size() - 1));
+        Contacts after = app.contact().all();
+        assertThat(after, equalTo(before.without(deletedContact)));
     }
 
 

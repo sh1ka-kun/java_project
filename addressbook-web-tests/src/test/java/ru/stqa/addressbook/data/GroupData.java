@@ -10,6 +10,18 @@ public class GroupData {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
+
     public GroupData withName(String name) {
         this.name = name;
         return this;
@@ -28,18 +40,6 @@ public class GroupData {
     public GroupData withId(int id) {
         this.id = id;
         return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getHeader() {
-        return header;
-    }
-
-    public String getFooter() {
-        return footer;
     }
 
     @Override

@@ -3,11 +3,9 @@ package ru.stqa.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import ru.stqa.addressbook.data.ContactData;
-import ru.stqa.addressbook.data.GroupData;
+import ru.stqa.addressbook.data.Contacts;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContactHelper extends BaseHelper {
@@ -32,13 +30,15 @@ public class ContactHelper extends BaseHelper {
         click(By.linkText("add new"));
     }
 
-    public void clickContactUpdate(int index) { wd.findElements(By.xpath("//img[@title='Edit']")).get(index).click(); }
+    public void clickContactUpdateById(int id) {
+        wd.findElement(By.xpath(String.format("//a[@href='edit.php?id=%s']", id))).click();
+    }
 
 
     public void submitContactUpdate() { click(By.name("update")); }
 
-    public void selectContact(int index) {
-        wd.findElements(By.name("selected[]")).get(index).click(); }
+    public void selectContactById(int id) {
+        wd.findElement(By.cssSelector("input[value='" + id + "']")).click(); }
 
     public void deleteContact() { click(By.xpath("//div[@id='content']/form[2]/div[2]/input")); }
 
@@ -48,11 +48,21 @@ public class ContactHelper extends BaseHelper {
         clickAddContact();
         fillContactForm(contact);
         submitContactCreation();
+        contactCache = null;
         returnToHomePage();
     }
 
-    public List<ContactData> list() {
-        List<ContactData> contacts = new ArrayList<ContactData>();
+    public int count(){
+        return wd.findElements(By.name("selected[]")).size();
+    }
+
+    private Contacts contactCache = null;
+
+    public Contacts all() {
+        if(contactCache != null){
+            return new Contacts(contactCache);
+        }
+        contactCache = new Contacts();
         List<WebElement> elements = wd.findElements(By.xpath("//tbody/tr[@name='entry']"));
         for (WebElement element : elements)
         {
@@ -60,22 +70,24 @@ public class ContactHelper extends BaseHelper {
             List<WebElement> cells = element.findElements(By.tagName("td"));
             String lastName = cells.get(1).getText();
             String firstName = cells.get(2).getText();
-            contacts.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName));
+            contactCache.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName));
         }
-        return contacts;
+        return new Contacts(contactCache);
     }
 
-    public void update(int index, ContactData contact) {
-        clickContactUpdate(index);
+    public void update(ContactData contact) {
+        clickContactUpdateById(contact.getId());
         fillContactForm(contact);
         submitContactUpdate();
+        contactCache = null;
         returnToHomePage();
     }
 
-    public void delete(int index) {
-        selectContact(index);
+    public void delete(ContactData contact) {
+        selectContactById(contact.getId());
         deleteContact();
         confirmContactDeletion();
+        contactCache = null;
         returnToHomePage();
     }
 
@@ -83,4 +95,15 @@ public class ContactHelper extends BaseHelper {
         click(By.linkText("home"));
     }
 
+    public ContactData infoFromEditForm(ContactData contact) {
+        clickContactUpdateById(contact.getId());
+        String firstName = wd.findElement(By.name("firstname")).getAttribute("value");
+        String lastName = wd.findElement(By.name("lastname")).getAttribute("value");
+        String home = wd.findElement(By.name("home")).getAttribute("value");
+        String mobile = wd.findElement(By.name("mobile")).getAttribute("value");
+        String work = wd.findElement(By.name("work")).getAttribute("value");
+        wd.navigate().back();
+        return new ContactData().withId(contact.getId()).withFirstName(firstName).withLastName(lastName)
+                .withMobilePhone(mobile).withHomePhone(home).withWorkPhone(work);
+    }
 }

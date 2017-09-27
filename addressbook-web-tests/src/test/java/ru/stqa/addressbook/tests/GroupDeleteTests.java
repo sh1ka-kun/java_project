@@ -1,33 +1,31 @@
 package ru.stqa.addressbook.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import ru.stqa.addressbook.data.GroupData;
+import ru.stqa.addressbook.data.Groups;
 
-import java.util.HashSet;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GroupDeleteTests extends BaseMethods {
 
     @BeforeTest
     public void ensurePreconditions(){
         app.goTo().groupPage();
-        if(app.group().list().size() == 0) {
+        if(app.group().all().size() == 0) {
             app.group().create(new GroupData().withName("name").withFooter("footer").withHeader("header"));
         }
     }
 
     @Test
     public void DeleteGroupTests() throws InterruptedException {
-        List<GroupData> before = app.group().list();
-        int index = before.size() - 1;
-        app.group().delete(index);
-        List<GroupData> after = app.group().list();
-        Assert.assertEquals(after.size(), index);
-
-        before.remove(index);
-        Assert.assertEquals(new HashSet<Object>(after), new HashSet<Object>(before));
+        Groups before = app.group().all();
+        GroupData deletedGroup = before.iterator().next();
+        app.group().delete(deletedGroup);
+        assertThat(app.group().count(), equalTo(before.size() - 1));
+        Groups after = app.group().all();
+        assertThat(after, equalTo(before.without(deletedGroup)));
     }
 
 
