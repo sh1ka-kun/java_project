@@ -14,7 +14,8 @@ public class ContactUpdateTests extends BaseMethods {
     public void ensurePreconditions(){
         if(app.contact().all().size() == 0) {
             app.contact().create(new ContactData().
-                    withFirstName("firstName").withLastName("lastName").withEmail("email@com").withAddress("address").withMobilePhone("156"));
+                    withFirstName("firstName").withLastName("lastName").withEmail("email@com").withAddress("address").
+                    withHomePhone("123").withMobilePhone("456").withWorkPhone("789"));
         }
     }
 
@@ -25,7 +26,8 @@ public class ContactUpdateTests extends BaseMethods {
         ContactData updatedContact = before.iterator().next();
         ContactData contact = new ContactData().
                 withId(updatedContact.getId()).withFirstName("updfirstName").withLastName("updlastName").
-                withEmail("updemail@com").withAddress("updaddress").withMobilePhone("156156");
+                withEmail("updemail@com").withAddress("updaddress").
+                withHomePhone("123123").withMobilePhone("456456").withWorkPhone("789789");
         app.contact().update(contact);
         assertThat(app.group().count(), equalTo(before.size()));
         Contacts after = app.contact().all();

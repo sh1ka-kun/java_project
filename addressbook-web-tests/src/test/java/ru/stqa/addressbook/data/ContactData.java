@@ -1,14 +1,27 @@
 package ru.stqa.addressbook.data;
 
+import com.google.gson.annotations.Expose;
+
+import java.io.File;
+
 public class ContactData {
     private int id = Integer.MAX_VALUE;
+    @Expose
     private String firstName;
+    @Expose
     private String lastName;
+    @Expose
     private String address;
+    @Expose
     private String mobilePhone;
+    @Expose
     private String homePhone;
+    @Expose
     private String workPhone;
+    @Expose
     private String email;
+    private String allPhones;
+    private File photo;
 
     public int getId() {
         return id;
@@ -40,6 +53,19 @@ public class ContactData {
 
     public String getWorkPhone() {
         return workPhone;
+    }
+
+    public String getAllPhones() {
+        return allPhones;
+    }
+
+    public File getPhoto() {
+        return photo;
+    }
+
+    public ContactData withAllPhones(String allPhones) {
+        this.allPhones = allPhones;
+        return this;
     }
 
     public ContactData withFirstName(String firstName) {
@@ -82,6 +108,11 @@ public class ContactData {
         return this;
     }
 
+    public ContactData withPhoto(File photo) {
+        this.photo = photo;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -109,5 +140,6 @@ public class ContactData {
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
+
 
 }
